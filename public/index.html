@@ -1,19 +1,16 @@
-<body>
-<form action="https://formspree.io/f/xvoldybr" method="POST">
-    <div>
-        <label for="userId">User ID</label>
-        <input type="text" name="User Id" id="userId" autocomplete="#" placeholder="1" required />
-    </div>
-
-    <div>
-        <label for="jobType">Job Type</label>
-        <input type="text" name="Job Type" id="jobType" autocomplete="jobType" placeholder="Software Engineer" required />
-    </div>
-
-    <div>
-        <button type="submit">
-            Submit
-        </button>
-    </div>
+<!-- modify this form HTML and place wherever you want your form -->
+<form
+        action="https://formspree.io/f/xvoldybr"
+        method="POST"
+>
+    <label for="userId">
+        Your userId:
+        <input type="text" name="userId" id="userId" required />
+    </label>
+    <label>
+        Job request:
+        <input type="text" name="jobType" id="jobType" required />
+    </label>
+    <!-- your other form fields go here -->
+    <button type="submit">Send</button>
 </form>
-</body>
