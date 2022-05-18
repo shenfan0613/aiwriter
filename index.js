@@ -14,7 +14,7 @@ const FORM_URL = "https://aiwriter.pages.dev/"
 
 async function handleRequest(request) {
     const url = new URL(request.url)
-    console.log(request.formData())
+    //console.log(request.formData())
     if (url.pathname === "/submit") {
         return submitHandler(request)
     }
@@ -34,6 +34,9 @@ const submitHandler = async request => {
         jobType,
     } = Object.fromEntries(body)
 
+    console.log(userId)
+    console.log(jobType)
+
     // The keys in "fields" are case-sensitive, and
     // should exactly match the field names you set up
     // in your Airtable table, such as "First Name".
@@ -43,7 +46,7 @@ const submitHandler = async request => {
             "Job Description": jobType,
         }
     }
-    console.log(reqBody)
+    //console.log(reqBody)
     await createAirtableRecord(reqBody)
     return Response.redirect(FORM_URL)
 }
