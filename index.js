@@ -1,3 +1,8 @@
+const axios = require('axios')
+let Airtable = require('airtable');
+let base = new Airtable({apiKey: 'keyVDFnHwMynxFqLv'}).base('appNzuUysRFnMK56E');
+
+
 const AIRTABLE_BASE_ID = "appNzuUysRFnMK56E"
 const AIRTABLE_API_KEY = "keyVDFnHwMynxFqLv"
 let airtableName = "Input"
@@ -9,7 +14,7 @@ const FORM_URL = "https://aiwriter.pages.dev/"
 
 async function handleRequest(request) {
     const url = new URL(request.url)
-
+    console.log(request)
     if (url.pathname === "/submit") {
         return submitHandler(request)
     }
@@ -24,7 +29,7 @@ const submitHandler = async request => {
     }
 
     const body = await request.formData();
-
+    console.log(body)
     const {
         userId,
         jobType,
@@ -39,14 +44,34 @@ const submitHandler = async request => {
             "Job Description": jobType,
         }
     }
-
+    console.log(reqBody)
     await createAirtableRecord(reqBody)
     return Response.redirect(FORM_URL)
 }
+
+const createRecord = body => {
+    base('Input').create([
+        {
+            "fields": {
+                "userId": body.fields.userId,
+                "Job Description": body.fields.jobType
+            }
+        }
+    ], function(err, records) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        records.forEach(function (record) {
+            console.log(record.getId());
+        });
+    });
+};
 const createAirtableRecord = body => {
+    console.log(JSON.stringify(body))
     return fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(airtableName)}`, {
         method: 'POST',
-        data: JSON.stringify(body),
+        body: JSON.stringify(body),
         headers: {
             Authorization: `Bearer ${AIRTABLE_API_KEY}`,
             'Content-type': `application/json`
