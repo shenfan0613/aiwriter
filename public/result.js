@@ -15,9 +15,17 @@ async function getFields(){
 }
 (async () => {
     let res = await getFields()
+    res.records.sort(function(a, b) {
+        var keyA = new Date(a.createdTime),
+            keyB = new Date(b.createdTime);
+        // Compare the 2 dates
+        if (keyA < keyB) return 1;
+        if (keyA > keyB) return -1;
+        return 0;
+    });
     //let fields = res.json()
     document.getElementById("result").innerHTML = res.records[0].fields.content
-    console.log(res.records[0].fields.content)
+    console.log(res.records)
  })()
 
 //let result = res.json()
