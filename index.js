@@ -14,7 +14,7 @@ const FORM_URL = "https://aiwriter.pages.dev/"
 
 async function handleRequest(request) {
     const url = new URL(request.url)
-    console.log(request.url)
+    console.log(request.formData())
     if (url.pathname === "/submit") {
         return submitHandler(request)
     }
