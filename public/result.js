@@ -24,8 +24,30 @@ async function getFields(){
         return 0;
     });
     //let fields = res.json()
+
     document.getElementById("result").innerHTML = res.records[0].fields.content
     console.log(res.records)
+    document.getElementById("showAll").onclick = function(){foo(res)}
+    function foo(res){
+        let userId = res.records[0].fields.userId
+        let inputId = document.getElementById("userId").value
+        if(inputId){
+            userId = inputId
+        }
+        let all = "\n"
+        let exist = false
+        for (const entry of res.records){
+            if(entry.fields.userId == userId){
+                all = all+ "<p>" +entry.fields.content +"</p>"
+                exist = true
+            }
+        }
+        if(!exist){
+            all = all+"NO ENTRY!"
+        }
+        document.getElementById("result").innerHTML = all
+
+    }
  })()
 
 //let result = res.json()
