@@ -4,5 +4,5 @@ let res = fetch('https://api.airtable.com/v0/appNzuUysRFnMK56E/paragragh/recxVGR
     }
 });
 //let result = res.json()
-console.log(res)
+console.log(res.body)
 //document.getElementById("result").innerHTML = result
