@@ -55,14 +55,7 @@ const submitHandler = async request => {
     //console.log(reqBody)
 
     await ryte({userId:userId,jobTitle:jobType})
-    //await createAirtableRecord({body:reqBody,tableName:"Input"})
-    // const reqBody2 = {
-    //     fields: {
-    //         "userId": userId,
-    //         "content": res.data[0].text,
-    //     }
-    // }
-    //await createAirtableRecord()
+    await createAirtableRecord({body:reqBody,tableName:"Input"})
     return Response.redirect(FORM_URL)
 }
 
