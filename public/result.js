@@ -3,6 +3,6 @@ let res = fetch('https://api.airtable.com/v0/appNzuUysRFnMK56E/paragragh/recxVGR
         'Authorization': 'Bearer keyVDFnHwMynxFqLv'
     }
 });
-let result = res.json()
-
-document.getElementById("result").innerHTML = result
+//let result = res.json()
+console.log(res)
+//document.getElementById("result").innerHTML = result
