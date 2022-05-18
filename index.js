@@ -29,7 +29,7 @@ async function handleRequest(request) {
         return submitHandler(request)
     }
 
-    return Response.redirect(RESULT_URL)
+    return Response.redirect(FORM_URL)
 }
 const submitHandler = async request => {
     if (request.method !== "POST") {
@@ -61,7 +61,7 @@ const submitHandler = async request => {
     }else{
         return Response.redirect(FAIL_URL)
     }
-    return Response.redirect(FORM_URL)
+    return Response.redirect(RESULT_URL)
 }
 
 async function checkUsage({userId}){
