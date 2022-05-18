@@ -11,7 +11,7 @@ addEventListener('fetch', event => {
 });
 
 const FORM_URL = "https://aiwriter.pages.dev/"
-const RESLT_URL = ""
+const RESULT_URL = "https://aiwriter.pages.dev/result"
 const useCaseJobDescriptionId = '60586b31cdebbb000c21058d'
 const languageIdEnglish = '607adac76f8fe5000c1e636d'
 const toneIdConvincing = '60572a639bdd4272b8fe358b'
@@ -25,7 +25,7 @@ async function handleRequest(request) {
         return submitHandler(request)
     }
 
-    return Response.redirect(FORM_URL)
+    return Response.redirect(RESULT_URL)
 }
 const submitHandler = async request => {
     if (request.method !== "POST") {
@@ -56,7 +56,7 @@ const submitHandler = async request => {
 
     await ryte({userId:userId,jobTitle:jobType})
     await createAirtableRecord({body:reqBody,tableName:"Input"})
-    return Response.redirect(FORM_URL)
+    return Response.redirect(RESULT_URL)
 }
 
 
