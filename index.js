@@ -1,4 +1,5 @@
 const AIRTABLE_BASE_ID = "appNzuUysRFnMK56E"
+const AIRTABLE_API_KEY = "keyVDFnHwMynxFqLv"
 let airtableName = "Input"
 addEventListener('fetch', event => {
     event.respondWith(handleRequest(event.request));
