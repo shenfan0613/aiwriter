@@ -14,7 +14,7 @@ const FORM_URL = "https://aiwriter.pages.dev/"
 
 async function handleRequest(request) {
     const url = new URL(request.url)
-    console.log(request)
+    console.log(request.url)
     if (url.pathname === "/submit") {
         return submitHandler(request)
     }
@@ -29,7 +29,6 @@ const submitHandler = async request => {
     }
 
     const body = await request.formData();
-    console.log(body)
     const {
         userId,
         jobType,
