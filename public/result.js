@@ -14,6 +14,7 @@ async function getFields(){
     return (await response).json()
 }
 (async () => {
+
     let res = await getFields()
     res.records.sort(function(a, b) {
         var keyA = new Date(a.createdTime),
