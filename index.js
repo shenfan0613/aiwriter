@@ -1,7 +1,7 @@
 const axios = require('axios')
 let Airtable = require('airtable');
 let base = new Airtable({apiKey: 'keyVDFnHwMynxFqLv'}).base('appNzuUysRFnMK56E');
-const USAGE_LIMIT = 4;
+const USAGE_LIMIT = 2;
 
 
 const AIRTABLE_BASE_ID = "appNzuUysRFnMK56E"
@@ -31,6 +31,7 @@ async function handleRequest(request) {
 
     return Response.redirect(FORM_URL)
 }
+
 const submitHandler = async request => {
     if (request.method !== "POST") {
         return new Response("Method Not Allowed", {
@@ -39,6 +40,8 @@ const submitHandler = async request => {
     }
 
     const body = await request.formData();
+    const headers = await request.headers;
+    const userIP =  headers.get('x-real-ip')
     const {
         userId,
         jobType,
@@ -53,10 +56,38 @@ const submitHandler = async request => {
             "Job Description": jobType,
         }
     }
+    const initialUser = {
+        fields:{
+            "userIP": userIP,
+            'userId': userId,
+            "usage": 0
+        }
+    }
     //console.log(reqBody)
-    let usage = await checkUsage({userId:userId})
-    if(usage <= USAGE_LIMIT){
-        await ryte({userId:userId,jobTitle:jobType})
+    let usage = 0;
+    let exist = await checkAccount({userId:userId})
+    let currentDate = + new Date()
+    //console.log("current timestamp" + currentDate)
+    let lastUpdate = await checkLastUpdate({userIP:userIP})
+    let dateDiff = currentDate - lastUpdate
+    //console.log(Date.parse(lastUpdate))
+    if(dateDiff >= 1500){
+        await resetIPUsage({userIP:userIP})
+    }
+    if(!exist){
+        await createAirtableRecord({body:initialUser,tableName:"user"})
+    }else{
+        usage = await checkUsage({userIP:userIP})
+        console.log(usage)
+    }
+    console.log("time since last update "+ dateDiff)
+
+    //console.log(userId + "used" + usage)
+    if(usage < USAGE_LIMIT){
+        await incrementUsage({userId:userId})
+        //await setUsage({userId:userId, usage:1000})
+
+        //await ryte({userId:userId,jobTitle:jobType})
         await createAirtableRecord({body:reqBody,tableName:"Input"})
     }else{
         return Response.redirect(FAIL_URL)
@@ -64,8 +95,8 @@ const submitHandler = async request => {
     return Response.redirect(RESULT_URL)
 }
 
-async function checkUsage({userId}){
-    let response = await fetch('https://api.airtable.com/v0/appNzuUysRFnMK56E/paragragh', {
+async function checkUsage({userIP}){
+    let response = await fetch('https://api.airtable.com/v0/appNzuUysRFnMK56E/user', {
         method:'GET',
         headers: {
             Authorization: `Bearer ${AIRTABLE_API_KEY}`,
@@ -78,16 +109,151 @@ async function checkUsage({userId}){
     let count = 0;
     //console.log(res)
     for (const entry of records){
-        if(entry.fields.userId == userId){
-            count += 1;
+        if(entry.fields.userIP === userIP){
+            count = count + entry.fields.usage;
         }
     }
     return count;
 }
+
+async function checkAccount({userId}){
+    let response = await fetch('https://api.airtable.com/v0/appNzuUysRFnMK56E/user', {
+        method:'GET',
+        headers: {
+            Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+            'Content-type': `application/json`
+        }
+    });
+    //console.log(await response.json())
+    let res = await response.json()
+    let records = res.records
+    let exist = false;
+    //console.log(res)
+    for (const entry of records){
+        if(entry.fields.userId === userId){
+            exist = true;
+        }
+    }
+    return exist;
+}
+
+async function checkLastUpdate({userIP}){
+    let response = await fetch('https://api.airtable.com/v0/appNzuUysRFnMK56E/user', {
+        method:'GET',
+        headers: {
+            Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+            'Content-type': `application/json`
+        }
+    });
+    //console.log(await response.json())
+    let res = await response.json()
+    let records = res.records
+    let date = 0;
+    //console.log(res)
+    for (const entry of records){
+        if(entry.fields.userIP === userIP){
+            if(date < Date.parse(entry.fields.lastUpdate)){
+                date = Date.parse(entry.fields.lastUpdate)
+            }
+
+        }
+    }
+    return date;
+}
+
+async function getFieldId({userId}){
+    let response = await fetch('https://api.airtable.com/v0/appNzuUysRFnMK56E/user', {
+        method:'GET',
+        headers: {
+            Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+            'Content-type': `application/json`
+        }
+    });
+    //console.log(await response.json())
+    let res = await response.json()
+    let records = res.records
+    let id
+    //console.log(res)
+    for (const entry of records){
+        if(entry.fields.userId === userId){
+            id = entry.id
+        }
+    }
+    return id;
+}
+
+async function resetIPUsage({userIP}){
+    let response = await fetch('https://api.airtable.com/v0/appNzuUysRFnMK56E/user', {
+        method:'GET',
+        headers: {
+            Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+            'Content-type': `application/json`
+        }
+    });
+    //console.log(await response.json())
+    let res = await response.json()
+    let records = res.records
+    //console.log(res)
+    for (const entry of records){
+        if(entry.fields.userIP === userIP){
+            let id = entry.id
+            let userId = entry.fields.userId
+            await setUsage({userId:userId, usage: 0})
+        }
+    }
+    return response;
+}
+async function incrementUsage({userId}){
+    let tableName = "user"
+    let currentUsage = await checkUsage({userId})
+    let id = await getFieldId({userId})
+    let reqBody = {
+        'records': [
+            {
+                'id': id,
+                'fields': {
+                    'userId': userId,
+                    'usage': currentUsage +=1
+                }
+            }
+        ]
+    }
+    return await patchAirtableRecord({body:reqBody, tableName: tableName})
+}
+
+async function setUsage({userId,usage}){
+    let tableName = "user"
+    let id = await getFieldId({userId})
+    let reqBody = {
+        'records': [
+            {
+                'id': id,
+                'fields': {
+                    'userId': userId,
+                    'usage': usage
+                }
+            }
+        ]
+    }
+    console.log("set user " + userId + " usage to " + usage)
+    return await patchAirtableRecord({body:reqBody, tableName: tableName})
+}
+
 async function createAirtableRecord ({body,tableName}) {
     //console.log(JSON.stringify(body))
     return fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(tableName)}`, {
         method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+            Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+            'Content-type': `application/json`
+        }
+    })
+}
+async function patchAirtableRecord ({body,tableName}) {
+    //console.log("patch body:" + JSON.stringify(body))
+    return fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(tableName)}`, {
+        method: 'PATCH',
         body: JSON.stringify(body),
         headers: {
             Authorization: `Bearer ${AIRTABLE_API_KEY}`,
