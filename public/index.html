@@ -30,8 +30,8 @@
 										<div class="row">
 											<div class="col-md-6">
 												<div class="form-group">
-													<label for="userId"> <p>Your email: </p>
-													<input type="email" name="userId" id="userId" value="aaa@example.com" required />
+													<label hidden for="userId"> <p>Your email: </p>
+													<input type="text" name="userId" id="userId" value="tempUser"/>
 													</label>
 												</div>
 											</div>
@@ -42,6 +42,9 @@
 													</label>
 												</div>
 											</div>
+											<label hidden for="requestType">
+												<input hidden type="text" name="requestType" id="requestType" value="jobDescription" required />
+											</label>
 											<div class="col-md-12">
 												<div class="form-group">
 													<input type="submit" value="Send Message" class="btn btn-primary">

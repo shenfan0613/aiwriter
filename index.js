@@ -2,8 +2,8 @@ const USAGE_LIMIT = 2;
 //const sgMail = require('@sendgrid/mail')
 
 
-const AIRTABLE_BASE_ID = "appNzuUysRFnMK56E"
-const AIRTABLE_API_KEY = "keyVDFnHwMynxFqLv"
+const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
 let airtableName = "Input"
 addEventListener('fetch', event => {
     event.respondWith(handleRequest(event.request));
@@ -13,11 +13,11 @@ const FORM_URL = "https://aiwriter.pages.dev/"
 const RESULT_URL = "https://aiwriter.pages.dev/result"
 const FAIL_URL = "https://aiwriter.pages.dev/fail"
 const useCaseJobDescriptionId = '60586b31cdebbb000c21058d'
+const useCaseInterviewQuestionId = '6058693ccdebbb000c210588'
 const languageIdEnglish = '607adac76f8fe5000c1e636d'
 const toneIdConvincing = '60572a639bdd4272b8fe358b'
-const RYTE_API_KEY = 'IW768OH1GVGN_-HKI93FZ'
-const RYTE_API_URL = 'https://api.rytr.me/v1'
-const SENDGRID_API_KEY = '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'
+const RYTE_API_KEY = process.env.RYTE_API_KEY
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
 
 
 
@@ -44,8 +44,10 @@ const submitHandler = async request => {
     const {
         userId,
         jobType,
+        requestType,
     } = Object.fromEntries(body)
     console.log(Object.fromEntries(body))
+    let ryteId
 
     // The keys in "fields" are case-sensitive, and
     // should exactly match the field names you set up
@@ -87,7 +89,15 @@ const submitHandler = async request => {
         //await incrementUsage({userId:userId})
         //await setUsage({userId:userId, usage:1000})
         //await sendEmail()
-        await ryte({userId:userId,jobTitle:jobType,ryteId:useCaseJobDescriptionId})
+        if (requestType === "jobDescription"){
+            ryteId = useCaseJobDescriptionId
+            await ryte({userId:userId,jobTitle:jobType,ryteId:ryteId})
+        }else if(requestType === "interviewQuestion"){
+            ryteId = useCaseInterviewQuestionId
+            let response = await ryte({userId:userId,jobTitle:jobType,ryteId:ryteId})
+            console.log(response.json())
+        }
+        await ryte({userId:userId,jobTitle:jobType,ryteId:ryteId})
         //await createAirtableRecord({body:reqBody,tableName:"Input"})
     }else{
         return Response.redirect(FAIL_URL)
@@ -324,7 +334,7 @@ async function ryte({userId, jobTitle, ryteId}) {
     }
     await createAirtableRecord ({body:reqBody2,tableName:"paragragh"})
 
-    return null
+    return data1.data[0].text
 
 }``
 // (async () => {

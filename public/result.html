@@ -47,7 +47,7 @@
                             <div class="contact-wrap w-100 p-md-5 p-4">
                                 <p id="result"></p>
                                 <div class="contact-wrap w-100 p-md-5 p-4">
-                                    <form action="https://email-worker.sffs470.workers.dev/submit" method="POST">
+                                    <form action="https://my-worker.sffs470.workers.dev/submit" method="POST">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -56,17 +56,22 @@
                                                     </label>
                                                 </div>
                                             </div>
+                                            <label hidden for="requestType"> <p>Your email: </p>
+                                                <input hidden type="text" name="requestType" id="requestType" value="interviewQuestion" required />
+                                            </label>
+                                            <div class="form-group">
+                                                <p hidden id ="job">
+                                                </p>
+                                                </label>
+                                            </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <input type="submit" value="Request Interview Question" class="btn btn-primary">
                                                     <div class="submitting"></div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <p id ="job">
-                                                </p>
-                                                </label>
-                                            </div>
+
+
                                         </div>
                                     </form>
                                     <div><a href="https://aiwriter.pages.dev/">Return</a></div>
