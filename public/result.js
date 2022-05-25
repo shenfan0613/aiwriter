@@ -28,6 +28,9 @@ async function getFields(){
 
     document.getElementById("result").innerHTML = res.records[0].fields.content
     console.log(res.records)
+    let inner = "<label for=\"jobType\"> \n" +
+        "<input type=\"text\" name=\"jobType\" id=\"jobType\" value=\""+res.records[0].fields.jobType+"\"/>"
+    document.getElementById("job").innerHTML = inner
     document.getElementById("showAll").onclick = function(){foo(res)}
     function foo(res){
         let userId = res.records[0].fields.userId
@@ -47,9 +50,9 @@ async function getFields(){
             all = all+"NO ENTRY!"
         }
         document.getElementById("result").innerHTML = all
-
     }
  })()
+
 
 //let result = res.json()
 //console.log(res.json())

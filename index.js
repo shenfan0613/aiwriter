@@ -1,7 +1,5 @@
-const axios = require('axios')
-let Airtable = require('airtable');
-let base = new Airtable({apiKey: 'keyVDFnHwMynxFqLv'}).base('appNzuUysRFnMK56E');
 const USAGE_LIMIT = 2;
+//const sgMail = require('@sendgrid/mail')
 
 
 const AIRTABLE_BASE_ID = "appNzuUysRFnMK56E"
@@ -17,8 +15,9 @@ const FAIL_URL = "https://aiwriter.pages.dev/fail"
 const useCaseJobDescriptionId = '60586b31cdebbb000c21058d'
 const languageIdEnglish = '607adac76f8fe5000c1e636d'
 const toneIdConvincing = '60572a639bdd4272b8fe358b'
-const RYTE_API_KEY = 'QHPVUE6PN9JZOBEDLRVQH'
+const RYTE_API_KEY = 'IW768OH1GVGN_-HKI93FZ'
 const RYTE_API_URL = 'https://api.rytr.me/v1'
+const SENDGRID_API_KEY = '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'
 
 
 
@@ -46,6 +45,7 @@ const submitHandler = async request => {
         userId,
         jobType,
     } = Object.fromEntries(body)
+    console.log(Object.fromEntries(body))
 
     // The keys in "fields" are case-sensitive, and
     // should exactly match the field names you set up
@@ -67,7 +67,7 @@ const submitHandler = async request => {
     let usage = 0;
     let exist = await checkAccount({userId:userId})
     let currentDate = + new Date()
-    //console.log("current timestamp" + currentDate)
+    //console.log("current timestamp" + currentDate)cd
     let lastUpdate = await checkLastUpdate({userIP:userIP})
     let dateDiff = currentDate - lastUpdate
     //console.log(Date.parse(lastUpdate))
@@ -84,17 +84,48 @@ const submitHandler = async request => {
 
     //console.log(userId + "used" + usage)
     if(usage < USAGE_LIMIT){
-        await incrementUsage({userId:userId})
+        //await incrementUsage({userId:userId})
         //await setUsage({userId:userId, usage:1000})
-
-        //await ryte({userId:userId,jobTitle:jobType})
-        await createAirtableRecord({body:reqBody,tableName:"Input"})
+        //await sendEmail()
+        await ryte({userId:userId,jobTitle:jobType,ryteId:useCaseJobDescriptionId})
+        //await createAirtableRecord({body:reqBody,tableName:"Input"})
     }else{
         return Response.redirect(FAIL_URL)
     }
     return Response.redirect(RESULT_URL)
 }
+async function sendEmail(){
 
+    return await fetch('https://api.sendgrid.com/v3/mail/send', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${SENDGRID_API_KEY}`,
+            'Content-Type': 'application/json'
+        },
+        // body: '{"personalizations": [{"to": [{"email": "test@example.com"}]}],"from": {"email": "test@example.com"},"subject": "Sending with SendGrid is Fun","content": [{"type": "text/plain", "value": "and easy to do anywhere, even with cURL"}]}',
+        body: JSON.stringify({
+            'personalizations': [
+                {
+                    'to': [
+                        {
+                            'email': 'shenfansj@gmail.com'
+                        }
+                    ]
+                }
+            ],
+            'from': {
+                'email': 'shenfansj@gmail.com'
+            },
+            'subject': 'Sending with SendGrid is Fun',
+            'content': [
+                {
+                    'type': 'text/plain',
+                    'value': 'and easy to do anywhere, even with cURL'
+                }
+            ]
+        })
+    });
+}
 async function checkUsage({userIP}){
     let response = await fetch('https://api.airtable.com/v0/appNzuUysRFnMK56E/user', {
         method:'GET',
@@ -263,12 +294,12 @@ async function patchAirtableRecord ({body,tableName}) {
 }
 
 
-// ryte
-async function ryte({userId, jobTitle}) {
+``// ryte
+async function ryte({userId, jobTitle, ryteId}) {
     const reqBody = {
             'languageId': languageIdEnglish,
             'toneId': toneIdConvincing,
-            'useCaseId':useCaseJobDescriptionId,
+            'useCaseId':ryteId,
             'inputContexts': {"JOB_ROLE_LABEL": jobTitle},
             'variations': 1,
             'userId': userId,
@@ -288,13 +319,14 @@ async function ryte({userId, jobTitle}) {
         fields: {
             "userId": userId,
             "content": data1.data[0].text,
+            "jobType": jobTitle
         }
     }
     await createAirtableRecord ({body:reqBody2,tableName:"paragragh"})
 
     return null
 
-}
+}``
 // (async () => {
 //     let data = await useCaseDetailById(useCaseJobDescriptionId)
 //     console.log(data)

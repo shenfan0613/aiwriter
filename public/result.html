@@ -46,18 +46,29 @@
                         <div class="col-md-12 d-flex align-items-stretch">
                             <div class="contact-wrap w-100 p-md-5 p-4">
                                 <p id="result"></p>
-                                <div class="col-md-12">
-                                    <div>
-                                        <label for="userId"> Your email: <br>
-                                        <input type="text" name="userId" id="userId"/>
-                                    </label>
-                                    </div>
-                                    <p></p>
-                                    <div class="form-group">
-
-                                        <input id="showAll" value="Show all past results" class="btn btn-primary">
-
-                                    </div>
+                                <div class="contact-wrap w-100 p-md-5 p-4">
+                                    <form action="https://email-worker.sffs470.workers.dev/submit" method="POST">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="userId"> <p>Your email: </p>
+                                                        <input type="email" name="userId" id="userId" placeholder="aaa@example.com" required />
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <input type="submit" value="Request Interview Question" class="btn btn-primary">
+                                                    <div class="submitting"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p id ="job">
+                                                </p>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </form>
                                     <div><a href="https://aiwriter.pages.dev/">Return</a></div>
                                 </div>
                             </div>
