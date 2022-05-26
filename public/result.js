@@ -31,6 +31,9 @@ async function getFields(){
     let inner = "<label for=\"jobType\"> \n" +
         "<input type=\"text\" name=\"jobType\" id=\"jobType\" value=\""+res.records[0].fields.jobType+"\"/>"
     document.getElementById("job").innerHTML = inner
+    let inner2 = "<label for=\"recordId\"> \n" +
+        "<input type=\"text\" name=\"recordId\" id=\"recordId\" value=\""+res.id+"\"/>"
+    document.getElementById("fieldId").innerHTML = inner2
     document.getElementById("showAll").onclick = function(){foo(res)}
     function foo(res){
         let userId = res.records[0].fields.userId
