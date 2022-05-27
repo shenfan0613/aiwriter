@@ -34,26 +34,27 @@ async function getFields(){
     let inner2 = "<label for=\"recordId\"> \n" +
         "<input type=\"text\" name=\"recordId\" id=\"recordId\" value=\""+res.records[0].id+"\"/>"
     document.getElementById("fieldId").innerHTML = inner2
-    document.getElementById("showAll").onclick = function(){foo(res)}
-    function foo(res){
-        let userId = res.records[0].fields.userId
-        let inputId = document.getElementById("userId").value
-        if(inputId){
-            userId = inputId
-        }
-        let all = "\n"
-        let exist = false
-        for (const entry of res.records){
-            if(entry.fields.userId == userId){
-                all = all+ "<p>" +entry.fields.content +"</p>"
-                exist = true
-            }
-        }
-        if(!exist){
-            all = all+"NO ENTRY!"
-        }
-        document.getElementById("result").innerHTML = all
-    }
+
+    // document.getElementById("showAll").onclick = function(){foo(res)}
+    // function foo(res){
+    //     let userId = res.records[0].fields.userId
+    //     let inputId = document.getElementById("userId").value
+    //     if(inputId){
+    //         userId = inputId
+    //     }
+    //     let all = "\n"
+    //     let exist = false
+    //     for (const entry of res.records){
+    //         if(entry.fields.userId == userId){
+    //             all = all+ "<p>" +entry.fields.content +"</p>"
+    //             exist = true
+    //         }
+    //     }
+    //     if(!exist){
+    //         all = all+"NO ENTRY!"
+    //     }
+    //     document.getElementById("result").innerHTML = all
+    // }
  })()
 
 

@@ -25,8 +25,8 @@
 					<div class="wrapper">
 						<div class="row no-gutters">
 							<div class="col-lg-12 d-flex align-items-stretch">
-								<div class="contact-wrap w-100 p-md-5 p-4">
-									<form action="https://my-worker.sffs470.workers.dev/submit" method="POST">
+								<div id="form" class="contact-wrap w-100 p-md-5 p-4" style="display:block">
+									<form action="https://my-worker.sffs470.workers.dev/submit" method="POST" onsubmit="foo()"  >
 										<div class="row">
 											<div class="col-md-6">
 												<div class="form-group">
@@ -49,13 +49,21 @@
 												</label>
 											</div>
 											<div class="col-md-12">
-												<div class="form-group">
-													<input type="submit" value="Send Message" class="btn btn-primary">
+												<div  class="form-group">
+<!--													<button id ="submit" type="submit"  value="Send Message" class="btn btn-primary">-->
+													<input type="submit"  value="Send Message" class="btn btn-primary">
 													<div class="submitting"></div>
 												</div>
 											</div>
+
 										</div>
 									</form>
+								</div>
+								<div id="loading" class="contact-wrap w-100 p-md-5 p-4" style="display:none;">
+									<div>
+									<h3> Generating Ideas </h3>
+									<img id="loading-image" src="images/loading.gif" alt="Loading..." style="width:200px;height:200px;"/>
+									</div>
 								</div>
 							</div>
 				          </div>
@@ -67,7 +75,17 @@
 		</div>
 		</div>
 	</section>
+	<script type="text/javascript">
+		document.getElementById("submit").onclick = function(){
 
+		}
+		function foo(){
+			var x = document.getElementById("loading");
+			let form = document.getElementById("form");
+			form.style.display = "none"
+			x.style.display = "block"
+		}
+	</script>
 	<!-- <script src="js/jquery.min.js"></script>
   <script src="js/popper.js"></script>
   <script src="js/bootstrap.min.js"></script>
@@ -75,5 +93,6 @@
   <script src="js/main.js"></script> -->
 
 	</body>
+
 </html>
 

@@ -47,7 +47,7 @@
                             <div class="contact-wrap w-100 p-md-5 p-4">
                                 <p id="result"></p>
                                 <div class="contact-wrap w-100 p-md-5 p-4">
-                                    <form action="https://my-worker.sffs470.workers.dev/submit" method="POST">
+                                    <form action="https://my-worker.sffs470.workers.dev/submit" onsubmit="foo()" method="POST">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -73,12 +73,14 @@
                                                     <input type="submit" value="Request Interview Question" class="btn btn-primary">
                                                     <div class="submitting"></div>
                                                 </div>
+                                                <div id ="loading" style="display: none">
+                                                    <p>Interview Questions sent to your e-mail!</p>
+                                                </div>
                                             </div>
-
 
                                         </div>
                                     </form>
-                                    <div><a href="https://aiwriter.pages.dev/">Return</a></div>
+                                    <div><a href="https://hirebeat.co/job-description-generator/">Return</a></div>
                                 </div>
                             </div>
                         </div>
@@ -92,6 +94,13 @@
     </div>
 </section>
 
+
+<script type="text/javascript">
+    function foo(){
+        var x = document.getElementById("loading");
+        x.style.display = "block"
+    }
+</script>
 <!-- <script src="js/jquery.min.js"></script>
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
