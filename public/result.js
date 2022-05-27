@@ -7,7 +7,7 @@
 async function getFields(){
     let response = fetch('https://api.airtable.com/v0/appNzuUysRFnMK56E/paragragh', {
         headers: {
-            'Authorization': 'Bearer keyVDFnHwMynxFqLv'
+            'Authorization': 'Bearer keyU4yYu5YxfF8OGY' //read-only key
         }
     });
     //console.log(await res.json())
